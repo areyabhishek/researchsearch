@@ -4,13 +4,11 @@ import logging
 from pathlib import Path
 from typing import List, Dict, Any
 from datetime import datetime
-import PyPDF2
+from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import Chroma
+from langchain_openai import OpenAIEmbeddings, OpenAI
+from langchain_community.vectorstores import Chroma
 from langchain.chains import RetrievalQA
-from langchain.llms import OpenAI
-from langchain.document_loaders import PyPDFLoader
 from langchain.schema import Document
 import chromadb
 from chromadb.config import Settings
