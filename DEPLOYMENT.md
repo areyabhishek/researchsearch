@@ -10,7 +10,7 @@ Render.com offers a free tier that's perfect for this application. The deploymen
 
 1. **Create a GitHub repository** (if you haven't already):
    ```bash
-   cd "/Users/abhishek/XYY research"
+   cd "research-paper-search"
    git init
    git add .
    git commit -m "Initial commit"

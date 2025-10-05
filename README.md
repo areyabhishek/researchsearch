@@ -24,7 +24,7 @@ A web application that allows users to search and query research papers using na
 
 ```bash
 # Clone or download the project
-cd "XYY research"
+cd "research-paper-search"
 
 # Install dependencies
 pip install -r requirements.txt
@@ -102,7 +102,7 @@ Set these in your Render service:
 ## File Structure
 
 ```
-XYY research/
+research-paper-search/
 ├── main.py                 # FastAPI application
 ├── pdf_processor.py        # LangChain PDF processing
 ├── requirements.txt        # Python dependencies

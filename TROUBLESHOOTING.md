@@ -125,7 +125,7 @@ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer publi
 4. **"File not found" errors:**
    ```bash
    # Make sure you're in the right directory
-   cd "/Users/abhishek/XYY research"
+   cd "research-paper-search"
    ```
 
 ## 🎉 **Success Indicators:**

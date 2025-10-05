@@ -205,12 +205,6 @@ class ResearchPaperProcessor:
                                     if term in content_lower:
                                         relevance_score += content_lower.count(term)
                                 
-                                # Also check for XYY-related terms
-                                xyy_terms = ["xyy", "47,xyy", "jacob", "syndrome", "trisomy", "chromosome"]
-                                for term in xyy_terms:
-                                    if term in content_lower:
-                                        relevance_score += content_lower.count(term) * 2
-                                
                                 if relevance_score > 0:
                                     # Extract relevant snippets (first 2000 chars)
                                     relevant_snippet = paper_content[:2000] + "..." if len(paper_content) > 2000 else paper_content
@@ -246,7 +240,7 @@ class ResearchPaperProcessor:
                     response = client.chat.completions.create(
                         model="gpt-3.5-turbo",
                         messages=[
-                            {"role": "system", "content": f"You are a research assistant. Answer the user's question based on the following research papers about XYY syndrome. Always cite the specific papers you reference using their filenames. Be specific and accurate.\n\nResearch Papers:\n{context_text}"},
+                            {"role": "system", "content": f"You are a research assistant. Answer the user's question based on the following research papers. Always cite the specific papers you reference using their filenames. Be specific and accurate.\n\nResearch Papers:\n{context_text}"},
                             {"role": "user", "content": question}
                         ],
                         max_tokens=600,
@@ -277,7 +271,7 @@ class ResearchPaperProcessor:
                     response = client.chat.completions.create(
                         model="gpt-3.5-turbo",
                         messages=[
-                            {"role": "system", "content": "You are a research assistant helping users find information about XYY syndrome. Provide helpful information based on your knowledge, but mention that you have access to a collection of research papers that may contain more specific information."},
+                            {"role": "system", "content": "You are a research assistant helping users find information. Provide helpful information based on your knowledge, but mention that you have access to a collection of research papers that may contain more specific information."},
                             {"role": "user", "content": question}
                         ],
                         max_tokens=500,
@@ -288,7 +282,7 @@ class ResearchPaperProcessor:
                     
                     return {
                         "answer": answer,
-                        "sources": [{"content": "General knowledge about XYY syndrome", "source": "AI Knowledge Base", "chunk_id": 0}],
+                        "sources": [{"content": "General knowledge from AI", "source": "AI Knowledge Base", "chunk_id": 0}],
                         "question": question
                     }
                 
