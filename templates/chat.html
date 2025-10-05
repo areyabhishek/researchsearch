@@ -187,16 +187,21 @@
         async function sendMessage() {
             const input = document.getElementById('messageInput');
             const message = input.value.trim();
-            
+
             if (!message) return;
-            
+
+            // Ensure token is loaded
+            if (!PUBLIC_TOKEN) {
+                await initializeToken();
+            }
+
             // Add user message to chat
             addMessage(message, 'user');
             input.value = '';
-            
+
             // Show loading
             showLoading(true);
-            
+
             try {
                 const response = await fetch(`${API_BASE}/chat`, {
                     method: 'POST',
@@ -273,9 +278,14 @@
         }
         
         async function showPapers() {
+            // Ensure token is loaded
+            if (!PUBLIC_TOKEN) {
+                await initializeToken();
+            }
+
             const modal = new bootstrap.Modal(document.getElementById('papersModal'));
             modal.show();
-            
+
             try {
                 const response = await fetch(`${API_BASE}/papers`, {
                     headers: {

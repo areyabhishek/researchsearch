@@ -221,27 +221,32 @@
         
         async function uploadFiles() {
             if (selectedFiles.length === 0) return;
-            
+
+            // Ensure token is loaded
+            if (!ADMIN_TOKEN) {
+                await initializeToken();
+            }
+
             const uploadProgress = document.getElementById('uploadProgress');
             const uploadStatus = document.getElementById('uploadStatus');
             const uploadBtn = document.getElementById('uploadBtn');
-            
+
             uploadProgress.style.display = 'block';
             uploadBtn.disabled = true;
-            
+
             const results = [];
-            
+
             for (let i = 0; i < selectedFiles.length; i++) {
                 const file = selectedFiles[i];
                 const progress = ((i + 1) / selectedFiles.length) * 100;
-                
+
                 uploadStatus.textContent = `Uploading ${file.name}... (${i + 1}/${selectedFiles.length})`;
                 document.querySelector('.progress-bar').style.width = `${progress}%`;
-                
+
                 try {
                     const formData = new FormData();
                     formData.append('file', file);
-                    
+
                     const response = await fetch(`${API_BASE}/upload`, {
                         method: 'POST',
                         headers: {
@@ -285,6 +290,11 @@
         }
         
         async function loadPapers() {
+            // Ensure token is loaded
+            if (!ADMIN_TOKEN) {
+                await initializeToken();
+            }
+
             try {
                 const response = await fetch(`${API_BASE}/papers`, {
                     headers: {
@@ -433,7 +443,12 @@
         
         async function reprocessPapers() {
             if (!confirm('This will reprocess all papers. Continue?')) return;
-            
+
+            // Ensure token is loaded
+            if (!ADMIN_TOKEN) {
+                await initializeToken();
+            }
+
             try {
                 const response = await fetch(`${API_BASE}/reprocess`, {
                     method: 'POST',
