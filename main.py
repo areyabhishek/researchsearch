@@ -234,8 +234,12 @@ async def view_paper(filename: str, token: str = Query(None)):
 
 
 @app.get("/paper/{filename}/summary")
-async def get_paper_summary(filename: str, token: str = Depends(verify_token)):
+async def get_paper_summary(filename: str, token: str = Query(None)):
     """Get summary of a specific paper"""
+    # Verify token
+    if not token or token not in [os.getenv("ADMIN_TOKEN"), os.getenv("PUBLIC_TOKEN")]:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
     try:
         processor = get_paper_processor()
         result = processor.get_paper_summary(filename)

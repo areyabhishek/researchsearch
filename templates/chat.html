@@ -188,7 +188,7 @@
                 sources.forEach(source => {
                     // Check if source has PDF and summary links
                     const pdfLink = source.pdf_link ? `<button onclick="viewPDF('${source.pdf_link}')" class="btn btn-sm btn-outline-primary me-2"><i class="fas fa-file-pdf"></i> View PDF</button>` : '';
-                    const summaryLink = source.summary_link ? `<a href="${source.summary_link}" target="_blank" class="btn btn-sm btn-outline-info"><i class="fas fa-info-circle"></i> Summary</a>` : '';
+                    const summaryLink = source.summary_link ? `<button onclick="viewSummary('${source.summary_link}')" class="btn btn-sm btn-outline-info"><i class="fas fa-info-circle"></i> Summary</button>` : '';
                     
                     messageContent += `
                         <div class="source-card">
@@ -258,6 +258,12 @@
             window.open(url, '_blank');
         }
         
+        function viewSummary(summaryPath) {
+            // Add authentication token as query parameter
+            const url = `${summaryPath}?token=${PUBLIC_TOKEN}`;
+            window.open(url, '_blank');
+        }
+        
         function displayPapers(papers) {
             const papersList = document.getElementById('papersList');
             
@@ -276,7 +282,7 @@
                 const pdfLink = paper.processed ? 
                     `<button onclick="viewPDF('/paper/${encodeURIComponent(paper.filename)}')" class="btn btn-sm btn-outline-primary me-2"><i class="fas fa-file-pdf"></i> View PDF</button>` : '';
                 const summaryLink = paper.processed ? 
-                    `<a href="/paper/${encodeURIComponent(paper.filename)}/summary" target="_blank" class="btn btn-sm btn-outline-info"><i class="fas fa-info-circle"></i> Summary</a>` : '';
+                    `<button onclick="viewSummary('/paper/${encodeURIComponent(paper.filename)}/summary')" class="btn btn-sm btn-outline-info"><i class="fas fa-info-circle"></i> Summary</button>` : '';
                 
                 html += `
                     <div class="col-md-6 mb-3">
