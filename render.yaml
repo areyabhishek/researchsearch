@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: research-paper-search
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    # Persistent disk for file uploads and vector database
+    disk:
+      name: research-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: ADMIN_TOKEN
+        generateValue: true  # Auto-generate secure token
+      - key: PUBLIC_TOKEN
+        generateValue: true  # Auto-generate secure token
+      - key: PYTHON_VERSION
+        value: 3.9.18
+      - key: UPLOAD_DIR
+        value: /opt/render/project/src/data/uploads
+      - key: VECTOR_DB_DIR
+        value: /opt/render/project/src/data/vector_db
