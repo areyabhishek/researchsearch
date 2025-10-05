@@ -88,6 +88,14 @@ async def root():
     """Root endpoint - serve the main application"""
     return {"message": "Research Paper Search API", "status": "running"}
 
+@app.get("/config")
+async def get_config():
+    """Get public configuration (tokens for frontend)"""
+    return {
+        "publicToken": PUBLIC_TOKEN,
+        "adminToken": ADMIN_TOKEN
+    }
+
 @app.get("/chat", response_class=HTMLResponse)
 async def chat_interface(request: Request):
     """Serve the chat interface"""

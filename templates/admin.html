@@ -126,31 +126,52 @@
     <script>
         const API_BASE = window.location.origin;
 
-        // Get token from localStorage, use default if not set
-        let ADMIN_TOKEN = localStorage.getItem('admin_token') || 'admin123';
+        // Token will be fetched from backend
+        let ADMIN_TOKEN = null;
+
+        // Fetch token from backend on page load
+        async function initializeToken() {
+            try {
+                const response = await fetch(`${API_BASE}/config`);
+                const config = await response.json();
+                ADMIN_TOKEN = config.adminToken;
+                updateTokenStatus();
+            } catch (error) {
+                console.error('Failed to fetch token:', error);
+                ADMIN_TOKEN = localStorage.getItem('admin_token') || 'admin123';
+                updateTokenStatus();
+            }
+        }
 
         // Update token status indicator
         function updateTokenStatus() {
             const isCustomToken = localStorage.getItem('admin_token') !== null;
-            document.getElementById('tokenStatus').textContent = isCustomToken ? '✓ Set' : 'Default';
+            const statusEl = document.getElementById('tokenStatus');
+            if (statusEl) {
+                statusEl.textContent = isCustomToken ? '✓ Custom' : '✓ Auto';
+            }
         }
 
-        // Allow user to update token
+        // Allow user to update token (override)
         function updateToken() {
-            const newToken = prompt('Enter your ADMIN_TOKEN:', ADMIN_TOKEN);
+            const newToken = prompt('Enter custom ADMIN_TOKEN (leave empty to use auto):', '');
             if (newToken && newToken.trim()) {
                 ADMIN_TOKEN = newToken.trim();
                 localStorage.setItem('admin_token', ADMIN_TOKEN);
                 updateTokenStatus();
-                alert('Token updated successfully!');
+                alert('Custom token set!');
+            } else {
+                localStorage.removeItem('admin_token');
+                initializeToken();
+                alert('Reset to auto token!');
             }
         }
 
         let selectedFiles = [];
-        
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            updateTokenStatus();
+            initializeToken();
             loadPapers();
             setupFileUpload();
         });

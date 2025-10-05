@@ -134,28 +134,49 @@
     <script>
         const API_BASE = window.location.origin;
 
-        // Get token from localStorage, use default if not set
-        let PUBLIC_TOKEN = localStorage.getItem('public_token') || 'public123';
+        // Token will be fetched from backend
+        let PUBLIC_TOKEN = null;
+
+        // Fetch token from backend on page load
+        async function initializeToken() {
+            try {
+                const response = await fetch(`${API_BASE}/config`);
+                const config = await response.json();
+                PUBLIC_TOKEN = config.publicToken;
+                updateTokenStatus();
+            } catch (error) {
+                console.error('Failed to fetch token:', error);
+                PUBLIC_TOKEN = localStorage.getItem('public_token') || 'public123';
+                updateTokenStatus();
+            }
+        }
 
         // Update token status indicator
         function updateTokenStatus() {
             const isCustomToken = localStorage.getItem('public_token') !== null;
-            document.getElementById('tokenStatus').textContent = isCustomToken ? '✓ Set' : 'Default';
+            const statusEl = document.getElementById('tokenStatus');
+            if (statusEl) {
+                statusEl.textContent = isCustomToken ? '✓ Custom' : '✓ Auto';
+            }
         }
 
-        // Allow user to update token
+        // Allow user to update token (override)
         function updateToken() {
-            const newToken = prompt('Enter your PUBLIC_TOKEN:', PUBLIC_TOKEN);
+            const newToken = prompt('Enter custom PUBLIC_TOKEN (leave empty to use auto):', '');
             if (newToken && newToken.trim()) {
                 PUBLIC_TOKEN = newToken.trim();
                 localStorage.setItem('public_token', PUBLIC_TOKEN);
                 updateTokenStatus();
-                alert('Token updated successfully!');
+                alert('Custom token set!');
+            } else {
+                localStorage.removeItem('public_token');
+                initializeToken();
+                alert('Reset to auto token!');
             }
         }
 
         // Initialize on page load
-        document.addEventListener('DOMContentLoaded', updateTokenStatus);
+        document.addEventListener('DOMContentLoaded', initializeToken);
         
         function handleKeyPress(event) {
             if (event.key === 'Enter') {
